@@ -1,4 +1,5 @@
 import { StackNavigator, TabNavigator } from 'react-navigation'
+import LaunchScreen from '../Containers/LaunchScreen'
 import CreatePostScreen from '../Containers/CreatePostScreen'
 import CartScreen from '../Containers/CartScreen'
 import FavoriteScreen from '../Containers/FavoriteScreen'
@@ -110,6 +111,7 @@ const TabBarScreen = TabNavigator(
 
 // Manifest of possible screens
 const PrimaryNav = StackNavigator({
+  LaunchScreen: { screen: LaunchScreen },
   CreatePostScreen: { screen: CreatePostScreen },
   RegisterScreen: { screen: RegisterScreen },
   LoginScreen: { screen: LoginScreen },
@@ -117,7 +119,7 @@ const PrimaryNav = StackNavigator({
 }, {
     // Default config for all screens
     headerMode: 'none',
-    initialRouteName: 'CreatePostScreen',
+    initialRouteName: 'LaunchScreen',
     navigationOptions: ({navigation}) => ({
       headerTintColor: 'white',
       headerBackTitle: null,

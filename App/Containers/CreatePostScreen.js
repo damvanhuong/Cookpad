@@ -70,7 +70,6 @@ class CreatePostScreen extends Component {
       case 2:
         if (this.refs.tutorialPage.getError() === '')
           this.handlePushData()
-        // this.props.navigation.goBack()
         else
           Alert.alert('Vui lòng nhập đủ thông tin!', this.refs.tutorialPage.getError())
         break
@@ -93,9 +92,10 @@ class CreatePostScreen extends Component {
     FirebaseController.uploadImage(foodData.image, 'image/jpeg').then(url => {
       foodData.image = url
       // upload database
-      Firebase.database().ref('foody').push({
+      Firebase.database().ref('feedy').push({
         ...foodData
       }).then(() => {
+        this.props.navigation.goBack()
         console.log('INSERTED !')
       }).catch(error => { console.log(error) })
     })

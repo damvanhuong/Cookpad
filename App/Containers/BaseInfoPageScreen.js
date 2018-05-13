@@ -23,7 +23,7 @@ export default class BaseInfoPageScreen extends Component {
     this.showTimePicker = this.showTimePicker.bind(this)
     this.hideTimePicker = this.hideTimePicker.bind(this)
     this.handleTimePicked = this.handleTimePicked.bind(this)
-   
+
     this.state = {
       image: null,
       foodName: '',
@@ -84,7 +84,7 @@ export default class BaseInfoPageScreen extends Component {
   onChangeDesText(text) {
     this.setState({ foodDes: text })
   }
-  
+
   renderImageContainer() {
     if (this.state.image) {
       return (
@@ -123,6 +123,7 @@ export default class BaseInfoPageScreen extends Component {
           onChangeText={this.onChangeNameText} />
         <View style={styles.line}></View>
         <TextInput style={[styles.textInput, { height: 100 }]}
+          multiline={true}
           textAlignVertical='top'
           placeholder='Mô tả ngắn gọn về món ăn'
           underlineColorAndroid='transparent'

@@ -64,7 +64,7 @@ export default class RegisterScreen extends Component {
       <ImageBackground style={styles.container} source={Images.bgLogin}>
         <ImageTextInput
           image={Images.userName}
-          hintText='Username'
+          hintText='Họ tên'
           onValueChange={this.onUserTextChange} />
         <ImageTextInput
           image={Images.email}
@@ -73,18 +73,18 @@ export default class RegisterScreen extends Component {
         <ImageTextInput
           secureTextEntry={true}
           image={Images.password}
-          hintText='Password'
+          hintText='Mật khẩu'
           onValueChange={this.onPasswordTextChange} />
         <ImageTextInput
           secureTextEntry={true}
           image={Images.password}
-          hintText='Confirm Password'
+          hintText='Nhập lại mật khẩu'
           onValueChange={this.onConfirmPasswordTextChange} />
         <TouchableOpacity style={styles.signUpButton} onPress={this.onPressSignUp}>
-          <Text style={styles.signUpText}>Sign Up</Text>
+          <Text style={styles.signUpText}>Đăng ký</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={this.onBack}>
-          <Text style={styles.signIn}>Already have an account? Sign In</Text>
+          <Text style={styles.signIn}>Đã có tài khoản rồi? Đăng nhập</Text>
         </TouchableOpacity>
       </ImageBackground>
     )

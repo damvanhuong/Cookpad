@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, ImageBackground, TouchableOpacity } from 'react-native'
+import { View, Text, ImageBackground, TouchableOpacity, AsyncStorage } from 'react-native'
 import { connect } from 'react-redux'
 import { Images } from '../Themes'
 import ImageTextInput from '../Components/ImageTextInput'
@@ -40,8 +40,12 @@ export default class LoginScreen extends Component {
     Firebase.auth().signInWithEmailAndPassword(this.state.userName, this.state.password).then(user => {
       // user signed in
       this.setState({ loading: false })
+      // save user data
+      var userData = { userName: this.state.userName, uid: user.uid }
+      
+      AsyncStorage.setItem('userData', JSON.stringify(userData))
       this.props.navigation.navigate('TabBarScreen')
-      console.log('User signed in', user)
+      console.log('User signed in', user, userData)
     }).catch(function (error) {
       // Handle Errors here.
       var errorCode = error.code;
@@ -62,20 +66,20 @@ export default class LoginScreen extends Component {
         <ImageTextInput
           value={this.state.userName}
           image={Images.userName}
-          hintText='Username'
+          hintText='Email hoặc tài khoản'
           onValueChange={this.onUserTextChange} />
         <ImageTextInput
           value={this.state.password}
           secureTextEntry={true}
           image={Images.password}
-          hintText='Password'
+          hintText='Mật khẩu'
           onValueChange={this.onPasswordTextChange} />
-        <Text style={styles.forgotPassword}>Forgot Password?</Text>
+        <Text style={styles.forgotPassword}>Quên mật khẩu?</Text>
         <TouchableOpacity style={styles.signInButton} onPress={this.onPressSignIn}>
-          <Text style={styles.signInText}>Sign In</Text>
+          <Text style={styles.signInText}>Đăng nhập</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={this.onPressSignUp}>
-          <Text style={styles.signUp}>Don't have an account? Sign Up</Text>
+          <Text style={styles.signUp}>Chưa có tài khoản? Đăng ký</Text>
         </TouchableOpacity>
       </ImageBackground>
     )
