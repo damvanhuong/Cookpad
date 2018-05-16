@@ -10,6 +10,7 @@ import Loading from '../Components/Loading'
 
 // Styles
 import styles from './Styles/LoginScreenStyle'
+import UserService from '../Config/UserService';
 
 export default class LoginScreen extends Component {
 
@@ -42,7 +43,7 @@ export default class LoginScreen extends Component {
       this.setState({ loading: false })
       // save user data
       var userData = { userName: this.state.userName, uid: user.uid }
-      
+      UserService.userInfo = userData
       AsyncStorage.setItem('userData', JSON.stringify(userData))
       this.props.navigation.navigate('TabBarScreen')
       console.log('User signed in', user, userData)

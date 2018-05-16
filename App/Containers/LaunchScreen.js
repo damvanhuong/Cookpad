@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { View, Image, AsyncStorage } from 'react-native'
+import UserService from '../Config/UserService'
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -18,8 +19,10 @@ class LaunchScreen extends Component {
     AsyncStorage.getItem('userData').then((value) => {
       console.log('userData', value)
       // logined in
-      if (value)
+      if (value){
+        UserService.userInfo = JSON.parse(value)
         this.props.navigation.navigate('TabBarScreen')
+      }
       else this.props.navigation.navigate('LoginScreen')
     })
   }

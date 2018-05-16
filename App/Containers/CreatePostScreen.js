@@ -15,6 +15,7 @@ import { IndicatorViewPager } from 'rn-viewpager';
 
 // Styles
 import styles from './Styles/CreatePostScreenStyle'
+import UserService from '../Config/UserService';
 
 class CreatePostScreen extends Component {
 
@@ -85,6 +86,7 @@ class CreatePostScreen extends Component {
     let tutorialData = this.refs.tutorialPage.getValue()
 
     let foodData = { ...baseInfoData, ...materialData, ...tutorialData }
+    foodData.uid = UserService.userInfo.uid
 
     console.log('foodData', foodData)
 
