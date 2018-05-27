@@ -41,20 +41,20 @@ class HomeScreen extends Component {
       })
       this.setState({ dataSource: feedyDatas })
     })
-    // Firebase.database().ref('foody').set({
-    //   email: 'hantanabka@gmail.com'
-    // }).then(() => {
-    //   console.log('INSERTED !')
-    // }).catch(error => { console.log(error) })
   }
 
   handleOpenCreatePostScreen() {
     this.props.navigation.navigate('CreatePostScreen')
   }
 
+  handleOpenPostDetailScreen = (item) => () => {
+    console.log('handleOpenPostDetailScreen', item)
+    this.props.navigation.navigate('PostDetailScreen', { data: item })
+  }
+
   renderItem({ item, index }) {
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={this.handleOpenPostDetailScreen(item)}>
         <HomeItem key={index} data={item} />
       </TouchableOpacity>
     )
@@ -70,9 +70,10 @@ class HomeScreen extends Component {
         style={{ height: 200 }}
         indicator={this.renderDotIndicator()}
       >
-        {this.state.bannerDatas.map((item, index) => <View>
-          <CachedImage key={index} style={{ height: 200 }} source={{ uri: item.image }} />
-        </View>)}
+        {this.state.bannerDatas.map((item, index) => (
+          <TouchableOpacity onPress={this.handleOpenPostDetailScreen}>
+            <CachedImage key={index} style={{ height: 200 }} source={{ uri: item.image }} />
+          </TouchableOpacity>))}
       </IndicatorViewPager>
     )
   }

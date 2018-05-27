@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Images } from '../Themes'
 import ImageTextInput from '../Components/ImageTextInput'
 import Firebase from '../Config/Firebase'
+import UserService from '../Config/UserService';
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -52,6 +53,18 @@ export default class RegisterScreen extends Component {
     Firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(user => {
       // user signed up
       console.log('User signed up', user)
+      var userData = { email: this.state.email, uid: user.uid }
+      UserService.userInfo = userData
+      AsyncStorage.setItem('userData', JSON.stringify(userData))
+
+      Firebase.database().ref('users').push({
+        email: this.state.email,
+        uid: user.uid,
+        userName: this.state.userName
+      }).then(() => {
+        this.props.navigation.navigate('TabBarScreen')
+        console.log('INSERTED !')
+      }).catch(error => { console.log(error) })
       HUD.dismiss()
     }).catch(function (error) {
       HUD.dismiss()

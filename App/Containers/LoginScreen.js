@@ -42,7 +42,7 @@ export default class LoginScreen extends Component {
       // user signed in
       this.setState({ loading: false })
       // save user data
-      var userData = { userName: this.state.userName, uid: user.uid }
+      var userData = { email: this.state.userName, uid: user.uid }
       UserService.userInfo = userData
       AsyncStorage.setItem('userData', JSON.stringify(userData))
       this.props.navigation.navigate('TabBarScreen')

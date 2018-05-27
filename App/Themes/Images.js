@@ -15,7 +15,8 @@ const images = {
   icCamera: require('../Images/ic_camera_white.png'),
   icRemove: require('../Images/ic_remove.png'),
   icAddGreen: require('../Images/ic_add_green.png'),
-  homeHeader: require('../Images/home_header.png')
+  homeHeader: require('../Images/home_header.png'),
+  icRating: require('../Images/ic_rating.png')
 }
 
 export default images

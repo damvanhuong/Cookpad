@@ -1,4 +1,7 @@
 import { StackNavigator, TabNavigator } from 'react-navigation'
+import RatingPageScreen from '../Containers/RatingPageScreen'
+import CommentPageScreen from '../Containers/CommentPageScreen'
+import PostDetailScreen from '../Containers/PostDetailScreen'
 import LaunchScreen from '../Containers/LaunchScreen'
 import CreatePostScreen from '../Containers/CreatePostScreen'
 import CartScreen from '../Containers/CartScreen'
@@ -111,6 +114,9 @@ const TabBarScreen = TabNavigator(
 
 // Manifest of possible screens
 const PrimaryNav = StackNavigator({
+  RatingPageScreen: { screen: RatingPageScreen },
+  CommentPageScreen: { screen: CommentPageScreen },
+  PostDetailScreen: { screen: PostDetailScreen },
   LaunchScreen: { screen: LaunchScreen },
   CreatePostScreen: { screen: CreatePostScreen },
   RegisterScreen: { screen: RegisterScreen },
