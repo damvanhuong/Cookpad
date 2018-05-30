@@ -21,6 +21,48 @@ export default StyleSheet.create({
     width: 25,
     resizeMode: 'contain'
   },
+  editButtonContainer: {
+    position: 'absolute',
+    height: 40,
+    width: 40,
+    top: 15,
+    right: 60,
+  },
+  deleteButtonContainer: {
+    position: 'absolute',
+    height: 40,
+    width: 40,
+    top: 15,
+    right: 10,
+  },
+  baseImage: {
+    height: 40,
+    width: 40,
+    resizeMode: 'contain'
+  },
+  cartImage:{
+    height: 35,
+    width: 35,
+    resizeMode: 'contain'
+  },
+  postTitleContainer: {
+    position: 'absolute',
+    height: 60,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    padding: 10,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+    backgroundColor: Colors.windowTint
+  },
+  postTitle: {
+    fontSize: 16,
+    color: 'white',
+    paddingRight: 10,
+    width: Metrics.screenWidth - 60
+  },
   indicatorContainer: {
     height: 55
   },

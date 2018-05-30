@@ -49,17 +49,17 @@ export default class TutorialPageScreen extends Component {
   getValue() {
     var tutorials = []
     for (let i = 0; i < this.state.dataSource.length; i++)
-      tutorials.push(this.textInputRef[`REF-FLATLIST${i}`].getText())
+      tutorials.push(this.textInputRef[`REF-FLATLIST-1-${i}`].getText())
 
     return { tutorials: tutorials }
   }
 
   getError() {
     var error = ''
-    console.log('tutorialItem', this.refs, this.textInputRef)
+    // console.log('tutorialItem', this.refs, this.textInputRef)
 
     for (let i = 0; i < this.state.dataSource.length; i++) {
-      if (this.textInputRef[`REF-FLATLIST${i}`].getText() === '') {
+      if (this.textInputRef[`REF-FLATLIST-1-${i}`].getText() === '') {
         error = 'Chưa nhập bước thực hiện'
         break
       }
@@ -81,7 +81,7 @@ export default class TutorialPageScreen extends Component {
     console.log('Item', rowData)
 
     return (
-      <TutorialItem ref={(ref) => this.textInputRef = { ...this.textInputRef, [`REF-FLATLIST${rowID}`]: ref }}
+      <TutorialItem ref={(ref) => this.textInputRef = { ...this.textInputRef, [`REF-FLATLIST-1-${rowID}`]: ref }}
         key={rowID}
         index={parseInt(rowID)}
         onPressRemove={this.handlePressRemove} />

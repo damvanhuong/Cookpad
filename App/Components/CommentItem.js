@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { View, Text, Image } from 'react-native'
-import StarRating from 'react-native-star-rating';
-import styles from './Styles/RatingItemStyle'
 import { Images } from '../Themes';
+import styles from './Styles/CommentItemStyle'
 
-export default class RatingItem extends Component {
+export default class CommentItem extends Component {
   // Prop type warnings
   static propTypes = {
     data: PropTypes.object.isRequired,
@@ -19,7 +18,6 @@ export default class RatingItem extends Component {
   render() {
     let avatar = this.props.data.avatar ? { uri: this.props.data.avatar } : Images.defaultAvatar
     let userName = this.props.data.userName || ''
-    let ratingCount = this.props.data.ratingCount || 0
     let comment = this.props.data.comment || ''
     let date = this.props.data.date || ''
 
@@ -28,14 +26,6 @@ export default class RatingItem extends Component {
         <Image style={styles.avatar} source={avatar} />
         <View style={styles.infoContainer}>
           <Text style={styles.userName}>{userName}</Text>
-          <StarRating
-            containerStyle={{ width: 130 }}
-            disabled={true}
-            maxStars={5}
-            starSize={25}
-            starStyle={styles.star}
-            rating={ratingCount}
-          />
           <Text style={styles.comment}>{comment}</Text>
         </View>
         <Text style={styles.date}>{date}</Text>

@@ -18,7 +18,7 @@ export default class LoginScreen extends Component {
     super(props)
     this.state = {
       loading: false,
-      userName: 'hantanabka@gmail.com',
+      userName: 'hantanabkhn@gmail.com',
       password: '12345678'
     }
 

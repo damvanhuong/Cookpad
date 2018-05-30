@@ -27,8 +27,8 @@ class HomeScreen extends Component {
     Firebase.database().ref('banners').on('value', (snap) => {
       var bannerDatas = [];
       snap.forEach((child) => {
-        console.log('bannerItem', child.val())
-        bannerDatas.push(child.val())
+        console.log('bannerItem', child.val(), child.key)
+        bannerDatas.push({ key: child.key, data: child.val() })
       })
       this.setState({ bannerDatas: bannerDatas })
     })
@@ -36,8 +36,8 @@ class HomeScreen extends Component {
     Firebase.database().ref('feedy').on('value', (snap) => {
       var feedyDatas = [];
       snap.forEach((child) => {
-        console.log('feedyItem', child.val())
-        feedyDatas.push(child.val())
+        console.log('feedyItem', child.val(), child.key)
+        feedyDatas.push({ key: child.key, data: child.val() })
       })
       this.setState({ dataSource: feedyDatas })
     })
@@ -55,7 +55,7 @@ class HomeScreen extends Component {
   renderItem({ item, index }) {
     return (
       <TouchableOpacity onPress={this.handleOpenPostDetailScreen(item)}>
-        <HomeItem key={index} data={item} />
+        <HomeItem key={index} data={item.data} />
       </TouchableOpacity>
     )
   }
@@ -72,7 +72,7 @@ class HomeScreen extends Component {
       >
         {this.state.bannerDatas.map((item, index) => (
           <TouchableOpacity onPress={this.handleOpenPostDetailScreen}>
-            <CachedImage key={index} style={{ height: 200 }} source={{ uri: item.image }} />
+            <CachedImage key={index} style={{ height: 200 }} source={{ uri: item.data.image }} />
           </TouchableOpacity>))}
       </IndicatorViewPager>
     )

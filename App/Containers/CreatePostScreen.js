@@ -79,7 +79,7 @@ class CreatePostScreen extends Component {
   }
 
   handlePushData() {
-    console.log('handlePushData', this.refs)
+    // console.log('handlePushData', this.refs)
 
     let baseInfoData = this.refs.baseInfoPage.getValue()
     let materialData = this.refs.materialPage.getValue()
@@ -87,7 +87,8 @@ class CreatePostScreen extends Component {
 
     let foodData = { ...baseInfoData, ...materialData, ...tutorialData }
     foodData.uid = UserService.userInfo.uid
-
+    foodData.ratings = []
+    foodData.comment = []
     console.log('foodData', foodData)
 
     //Upload image

@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
-import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native'
+import { View, Text, Image, TouchableOpacity, FlatList, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import { PagerTabIndicator, IndicatorViewPager, PagerTitleIndicator, PagerDotIndicator } from 'rn-viewpager';
 import { CachedImage } from 'react-native-cached-image';
 import Timeline from 'react-native-timeline-listview'
 import CommentPageScreen from './CommentPageScreen'
 import RatingPageScreen from './RatingPageScreen'
+import UserService from '../Config/UserService'
+import Firebase from '../Config/Firebase'
+
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -19,9 +22,11 @@ class PostDetailScreen extends Component {
     super(props)
 
     const mData = props.navigation.getParam('data', {})
-    this.state = { data: mData, tutorials: this.getTutorials(mData) }
+    this.state = { key: mData.key, data: mData.data, tutorials: this.getTutorials(mData.data) }
 
     this.goBack = this.goBack.bind(this)
+    this.onPressDeleteButton = this.onPressDeleteButton.bind(this)
+    this.onPressEditButton = this.onPressEditButton.bind(this)
     this.renderMaterialItem = this.renderMaterialItem.bind(this)
     this.renderTutorialItem = this.renderTutorialItem.bind(this)
   }
@@ -38,7 +43,35 @@ class PostDetailScreen extends Component {
     return listTutorial
   }
 
+  onPressDeleteButton() {
+    Alert.alert(
+      'Bạn có muốn xóa bài đăng này không?',
+      '',
+      [
+        { text: 'Không', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+        {
+          text: 'Có', onPress: () => {
+            console.log('OK Pressed')
+            Firebase.database().ref('feedy/' + this.state.key).remove().then(() => {
+              console.log('Delete Ok')
+              this.goBack()
+            }).catch((error) => {
+              console.log(error)
+            })
+          }
+        },
+      ],
+      { cancelable: false }
+    )
+  }
+
+  onPressEditButton() {
+
+  }
+
   renderImageHeader() {
+    let title = this.state.data.foodName || ''
+    let uid = this.state.data.uid
 
     return (
       <CachedImage
@@ -46,6 +79,24 @@ class PostDetailScreen extends Component {
         <TouchableOpacity style={styles.backButtonContainer} onPress={this.goBack}>
           <Image style={styles.backButton} source={Images.icBack} />
         </TouchableOpacity>
+        {UserService.userInfo.uid === uid ?
+          <TouchableOpacity style={styles.editButtonContainer} onPress={this.onPressEditButton}>
+            <Image style={styles.baseImage} source={Images.icEdit} />
+          </TouchableOpacity> : null
+        }
+        {UserService.userInfo.uid === uid ?
+          <TouchableOpacity style={styles.deleteButtonContainer} onPress={this.onPressDeleteButton}>
+            <Image style={styles.baseImage} source={Images.icDelete} />
+          </TouchableOpacity> : null
+        }
+        <View style={styles.postTitleContainer}>
+          <Text style={styles.postTitle}>{title}</Text>
+          {UserService.userInfo.uid !== uid ?
+            <TouchableOpacity >
+              <Image style={styles.cartImage} source={Images.tabbarShopping} />
+            </TouchableOpacity> : null
+          }
+        </View>
       </CachedImage>
     )
   }
@@ -126,8 +177,8 @@ class PostDetailScreen extends Component {
           <View>
             {this.renderTutorialPage()}
           </View>
-          <CommentPageScreen />
-          <RatingPageScreen />
+          <CommentPageScreen data={this.state.data} postKey={this.state.key} />
+          <RatingPageScreen data={this.state.data} postKey={this.state.key} />
         </IndicatorViewPager>
       </View>
     )

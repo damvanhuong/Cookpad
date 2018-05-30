@@ -19,7 +19,7 @@ class LaunchScreen extends Component {
     AsyncStorage.getItem('userData').then((value) => {
       console.log('userData', value)
       // logined in
-      if (value){
+      if (value && value !== ''){
         UserService.userInfo = JSON.parse(value)
         this.props.navigation.navigate('TabBarScreen')
       }

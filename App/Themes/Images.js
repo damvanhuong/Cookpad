@@ -16,7 +16,12 @@ const images = {
   icRemove: require('../Images/ic_remove.png'),
   icAddGreen: require('../Images/ic_add_green.png'),
   homeHeader: require('../Images/home_header.png'),
-  icRating: require('../Images/ic_rating.png')
+  icRating: require('../Images/ic_rating.png'),
+  icComment: require('../Images/ic_comment.png'),
+  icEdit: require('../Images/ic_edit.png'),
+  icDelete: require('../Images/ic_delete.png'),
+  icCart: require('../Images/ic_cart.png'),
+  defaultAvatar: require('../Images/default_avatar.png')
 }
 
 export default images

@@ -35,6 +35,6 @@ export default StyleSheet.create({
   },
   date: {
     fontSize: 14,
-    width: 80
+    width: 80,
   }
 })
