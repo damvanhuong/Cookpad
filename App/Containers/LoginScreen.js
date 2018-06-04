@@ -39,14 +39,8 @@ export default class LoginScreen extends Component {
   onPressSignIn() {
     this.setState({ loading: true })
     Firebase.auth().signInWithEmailAndPassword(this.state.userName, this.state.password).then(user => {
-      // user signed in
       this.setState({ loading: false })
-      // save user data
-      var userData = { email: this.state.userName, uid: user.uid }
-      UserService.userInfo = userData
-      AsyncStorage.setItem('userData', JSON.stringify(userData))
-      this.props.navigation.navigate('TabBarScreen')
-      console.log('User signed in', user, userData)
+      this.getUserInfo(user.uid)
     }).catch(function (error) {
       // Handle Errors here.
       var errorCode = error.code;
@@ -54,6 +48,24 @@ export default class LoginScreen extends Component {
       this.setState({ loading: false })
       alert(errorMessage);
     });
+  }
+
+  getUserInfo(uid){
+    console.log('getUserInfo', uid)
+    var queryText = uid
+    Firebase.database().ref('users')
+      .orderByChild('uid')
+      .startAt(queryText)
+      .endAt(queryText + "\uf8ff")
+      .once("value", (snapshot) => {
+        var userData
+        snapshot.forEach(function (child) {
+          userData = child.val()
+        })
+        UserService.userInfo = userData
+        AsyncStorage.setItem('userData', JSON.stringify(userData))
+        this.props.navigation.navigate('TabBarScreen')
+        console.log('User signed in', userData)      })
   }
 
   onPressSignUp() {

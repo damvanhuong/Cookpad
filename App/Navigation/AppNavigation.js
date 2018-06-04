@@ -1,4 +1,5 @@
 import { StackNavigator, TabNavigator } from 'react-navigation'
+import EditProfileScreen from '../Containers/EditProfileScreen'
 import RatingPageScreen from '../Containers/RatingPageScreen'
 import CommentPageScreen from '../Containers/CommentPageScreen'
 import PostDetailScreen from '../Containers/PostDetailScreen'
@@ -114,6 +115,7 @@ const TabBarScreen = TabNavigator(
 
 // Manifest of possible screens
 const PrimaryNav = StackNavigator({
+  EditProfileScreen: { screen: EditProfileScreen },
   RatingPageScreen: { screen: RatingPageScreen },
   CommentPageScreen: { screen: CommentPageScreen },
   PostDetailScreen: { screen: PostDetailScreen },

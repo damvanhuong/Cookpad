@@ -21,7 +21,8 @@ const images = {
   icEdit: require('../Images/ic_edit.png'),
   icDelete: require('../Images/ic_delete.png'),
   icCart: require('../Images/ic_cart.png'),
-  defaultAvatar: require('../Images/default_avatar.png')
+  defaultAvatar: require('../Images/default_avatar.png'),
+  icArrowRight: require('../Images/ic_arrow_right.png')
 }
 
 export default images

@@ -48,7 +48,7 @@ export default class CommentPageScreen extends Component {
     var postData = this.props.data
     var listComments = (postData && postData.comments !== undefined) ? postData.comments : []
     var comment = {}
-    comment.userName = UserService.userInfo.email
+    comment.userName = UserService.userInfo.userName
     comment.comment = this.state.comment
     comment.date = new Date().toJSON().slice(0, 10)
     listComments.push(comment)

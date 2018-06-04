@@ -54,7 +54,7 @@ class RatingPageScreen extends Component {
     var postData = this.props.data
     var listRating = (postData && postData.ratings !== undefined) ? postData.ratings : []
     var rating = {}
-    rating.userName = UserService.userInfo.email
+    rating.userName = UserService.userInfo.userName
     rating.ratingCount = this.state.ratingCount
     rating.comment = this.state.comment
     rating.date = new Date().toJSON().slice(0, 10)

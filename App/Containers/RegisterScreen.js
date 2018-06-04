@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { View, Text, ImageBackground, TouchableOpacity } from 'react-native'
+import { View, Text, ImageBackground, TouchableOpacity, AsyncStorage } from 'react-native'
 import { connect } from 'react-redux'
 import { Images } from '../Themes'
 import ImageTextInput from '../Components/ImageTextInput'
 import Firebase from '../Config/Firebase'
 import UserService from '../Config/UserService';
+import Loading from '../Components/Loading'
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -17,7 +18,7 @@ export default class RegisterScreen extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { userName: '', email: '', password: '', confirmPassword: '' }
+    this.state = { loading: false, userName: '', email: '', password: '', confirmPassword: '' }
 
     this.onUserTextChange = this.onUserTextChange.bind(this)
     this.onEmailTextChange = this.onEmailTextChange.bind(this)
@@ -28,7 +29,7 @@ export default class RegisterScreen extends Component {
   }
 
   onUserTextChange(text) {
-
+    this.setState({ userName: text })
   }
 
   onEmailTextChange(text) {
@@ -40,7 +41,7 @@ export default class RegisterScreen extends Component {
   }
 
   onConfirmPasswordTextChange(text) {
-
+    this.setState({ confirmPassword: text })
   }
 
   onBack() {
@@ -48,8 +49,8 @@ export default class RegisterScreen extends Component {
   }
 
   onPressSignUp() {
-    HUD.show()
-    console.log('onPressSignUp', this.state.email, this.state.password)
+    this.setState({ loading: true })
+    console.log('onPressSignUp')
     Firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(user => {
       // user signed up
       console.log('User signed up', user)
@@ -64,10 +65,13 @@ export default class RegisterScreen extends Component {
       }).then(() => {
         this.props.navigation.navigate('TabBarScreen')
         console.log('INSERTED !')
-      }).catch(error => { console.log(error) })
-      HUD.dismiss()
+      }).catch(error => {
+        console.log(error)
+        this.setState({ loading: false })
+      })
+      this.setState({ loading: false })
     }).catch(function (error) {
-      HUD.dismiss()
+      this.setState({ loading: false })
       alert(error.message)
     });
   }
@@ -75,20 +79,25 @@ export default class RegisterScreen extends Component {
   render() {
     return (
       <ImageBackground style={styles.container} source={Images.bgLogin}>
+        <Loading show={this.state.loading} />
         <ImageTextInput
+          value={this.state.userName}
           image={Images.userName}
           hintText='Họ tên'
           onValueChange={this.onUserTextChange} />
         <ImageTextInput
+          value={this.state.email}
           image={Images.email}
           hintText='Email'
           onValueChange={this.onEmailTextChange} />
         <ImageTextInput
+          value={this.state.password}
           secureTextEntry={true}
           image={Images.password}
           hintText='Mật khẩu'
           onValueChange={this.onPasswordTextChange} />
         <ImageTextInput
+          value={this.state.confirmPassword}
           secureTextEntry={true}
           image={Images.password}
           hintText='Nhập lại mật khẩu'
