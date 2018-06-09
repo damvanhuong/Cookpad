@@ -5,6 +5,8 @@ import HomeItem from '../Components/HomeItem'
 import { connect } from 'react-redux'
 import { IndicatorViewPager, PagerDotIndicator } from 'rn-viewpager';
 import { CachedImage } from 'react-native-cached-image';
+import Constants from '../Config/Constants'
+import Analytics from '../Lib/Analytics'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -24,6 +26,7 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
+    Analytics.trackingScreen(Constants.screenName.home)
     Firebase.database().ref('banners').on('value', (snap) => {
       var bannerDatas = [];
       snap.forEach((child) => {
@@ -71,7 +74,7 @@ class HomeScreen extends Component {
         indicator={this.renderDotIndicator()}
       >
         {this.state.bannerDatas.map((item, index) => (
-          <TouchableOpacity onPress={this.handleOpenPostDetailScreen}>
+          <TouchableOpacity onPress={this.handleOpenPostDetailScreen(item)}>
             <CachedImage key={index} style={{ height: 200 }} source={{ uri: item.data.image }} />
           </TouchableOpacity>))}
       </IndicatorViewPager>

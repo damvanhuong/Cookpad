@@ -13,6 +13,8 @@ import Search from 'react-native-search-box';
 import HomeItem from '../Components/HomeItem'
 import { CachedImage } from 'react-native-cached-image';
 import { Colors } from '../Themes';
+import Constants from '../Config/Constants'
+import Analytics from '../Lib/Analytics'
 
 class SearchScreen extends Component {
 
@@ -26,8 +28,17 @@ class SearchScreen extends Component {
     this.onSearch = this.onSearch.bind(this)
   }
 
+  componentDidMount(){
+    Analytics.trackingScreen(Constants.screenName.search)
+  }
+
   onValueChange() {
 
+  }
+
+  handleOpenPostDetailScreen = (item) => () => {
+    console.log('handleOpenPostDetailScreen', item)
+    this.props.navigation.navigate('PostDetailScreen', { data: item })
   }
 
   onSearch(text) {
@@ -41,7 +52,7 @@ class SearchScreen extends Component {
         // console.log('SearchScreen', snapshot.val());
         snapshot.forEach(function (child) {
           console.log('SearchScreen', child.val());
-          datas.push(child.val())
+          datas.push({ key: child.key, data: child.val() })
         })
         this.setState({ dataSource: datas })
       })
@@ -49,8 +60,8 @@ class SearchScreen extends Component {
 
   renderItem({ item, index }) {
     return (
-      <TouchableOpacity>
-        <HomeItem key={index} data={item} />
+      <TouchableOpacity onPress={this.handleOpenPostDetailScreen(item)}>
+        <HomeItem key={index} data={item.data} />
       </TouchableOpacity>
     )
   }

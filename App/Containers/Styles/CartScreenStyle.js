@@ -1,6 +1,12 @@
 import { StyleSheet } from 'react-native'
-import { ApplicationStyles } from '../../Themes/'
+import { Colors, Metrics } from '../../Themes/'
 
 export default StyleSheet.create({
-  ...ApplicationStyles.screen
+  container: {
+    flex: 1,
+    backgroundColor: Colors.listBg
+  },
+  flatList: {
+    marginHorizontal: Metrics.baseMargin,
+  }
 })

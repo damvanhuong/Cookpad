@@ -9,6 +9,8 @@ import TutorialPageScreen from './TutorialPageScreen'
 import FirebaseController from '../Lib/FirebaseController'
 import Firebase from '../Config/Firebase'
 import { IndicatorViewPager } from 'rn-viewpager';
+import Constants from '../Config/Constants'
+import Analytics from '../Lib/Analytics'
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -34,6 +36,9 @@ class CreatePostScreen extends Component {
     this.handleRightTitlePress = this.handleRightTitlePress.bind(this)
   }
 
+  componentDidMount() {
+    Analytics.trackingScreen(Constants.screenName.createPost)
+  }
 
   onPageSelected(page) {
     console.log(page)
@@ -99,6 +104,7 @@ class CreatePostScreen extends Component {
         ...foodData
       }).then(() => {
         this.props.navigation.goBack()
+        Analytics.logEvent(Constants.eventName.create_post_success, {})
         console.log('INSERTED !')
       }).catch(error => { console.log(error) })
     })

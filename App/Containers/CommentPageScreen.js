@@ -51,6 +51,8 @@ export default class CommentPageScreen extends Component {
     comment.userName = UserService.userInfo.userName
     comment.comment = this.state.comment
     comment.date = new Date().toJSON().slice(0, 10)
+    if (UserService.userInfo.avatar)
+      comment.avatar = UserService.userInfo.avatar
     listComments.push(comment)
     var ref = 'feedy/' + this.props.postKey
     var postRef = Firebase.database().ref(ref)

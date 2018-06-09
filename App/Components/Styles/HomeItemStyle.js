@@ -16,6 +16,7 @@ export default StyleSheet.create({
   title : {
     margin: Metrics.baseMargin,
     fontSize: 16,
+    color: 'black',
     fontWeight: 'bold'
   }
 })

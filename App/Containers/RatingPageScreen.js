@@ -58,6 +58,8 @@ class RatingPageScreen extends Component {
     rating.ratingCount = this.state.ratingCount
     rating.comment = this.state.comment
     rating.date = new Date().toJSON().slice(0, 10)
+    if (UserService.userInfo.avatar)
+      rating.avatar = UserService.userInfo.avatar
     listRating.push(rating)
     console.log(this.props.postKey, listRating)
     var ref = 'feedy/' + this.props.postKey

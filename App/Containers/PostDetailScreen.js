@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Image, TouchableOpacity, FlatList, Alert } from 'react-native'
+import { View, Text, Image, TouchableOpacity, FlatList, Alert, AsyncStorage } from 'react-native'
 import { connect } from 'react-redux'
 import { PagerTabIndicator, IndicatorViewPager, PagerTitleIndicator, PagerDotIndicator } from 'rn-viewpager';
 import { CachedImage } from 'react-native-cached-image';
@@ -8,6 +8,8 @@ import CommentPageScreen from './CommentPageScreen'
 import RatingPageScreen from './RatingPageScreen'
 import UserService from '../Config/UserService'
 import Firebase from '../Config/Firebase'
+import Constants from '../Config/Constants'
+import Analytics from '../Lib/Analytics'
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -22,13 +24,22 @@ class PostDetailScreen extends Component {
     super(props)
 
     const mData = props.navigation.getParam('data', {})
-    this.state = { key: mData.key, data: mData.data, tutorials: this.getTutorials(mData.data) }
+    this.state = {
+      loading: false,
+      key: mData.key, data: mData.data,
+      tutorials: this.getTutorials(mData.data)
+    }
 
     this.goBack = this.goBack.bind(this)
     this.onPressDeleteButton = this.onPressDeleteButton.bind(this)
     this.onPressEditButton = this.onPressEditButton.bind(this)
+    this.onPressShopping = this.onPressShopping.bind(this)
     this.renderMaterialItem = this.renderMaterialItem.bind(this)
     this.renderTutorialItem = this.renderTutorialItem.bind(this)
+  }
+
+  componentDidMount(){
+    Analytics.trackingScreen(Constants.screenName.postDetail)
   }
 
   goBack() {
@@ -41,6 +52,48 @@ class PostDetailScreen extends Component {
       listTutorial.push({ time: i + 1, text: data.tutorials[i] })
     }
     return listTutorial
+  }
+
+  onPressShopping() {
+    this.setState({ loading: true })
+    let uid = UserService.userInfo.uid
+    let ref = ''
+    let isAdded = false
+    let listShopping = (UserService.userInfo && UserService.userInfo.listShopping !== undefined) ? UserService.userInfo.listShopping : []
+    for (let i = 0; i < listShopping.length; i++) {
+      if (listShopping[i] === this.state.key) {
+        isAdded = true
+        break
+      }
+    }
+    if (isAdded) {
+      alert('Bạn đã thêm vào danh sách mua sắm rồi')
+      return
+    }
+    //Find user ref
+    Firebase.database().ref('users')
+      .orderByChild('uid')
+      .equalTo(uid)
+      .once("value", (snapshot) => {
+        var datas = [];
+        snapshot.forEach(function (child) {
+          ref = 'users/' + child.key
+          console.log('ref', ref, child)
+        })
+        listShopping.push(this.state.key)
+        // update user info
+        Firebase.database().ref(ref).update({
+          shoppingList: listShopping
+        }).then(() => {
+          this.setState({ loading: false })
+          UserService.userInfo.listShopping = listShopping
+          AsyncStorage.setItem('userData', JSON.stringify(UserService.userInfo))
+          console.log('Add to list shopping successfully !')
+        }).catch(error => {
+          this.setState({ loading: false })
+          console.log(error)
+        })
+      })
   }
 
   onPressDeleteButton() {
@@ -92,7 +145,7 @@ class PostDetailScreen extends Component {
         <View style={styles.postTitleContainer}>
           <Text style={styles.postTitle}>{title}</Text>
           {UserService.userInfo.uid !== uid ?
-            <TouchableOpacity >
+            <TouchableOpacity onPress={this.onPressShopping}>
               <Image style={styles.cartImage} source={Images.tabbarShopping} />
             </TouchableOpacity> : null
           }

@@ -23,16 +23,28 @@ export default StyleSheet.create({
   },
   titleContainer: {
     height: 50,
-    width: Metrics.screenWidth - 100,
+    width: Metrics.screenWidth - 120,
     paddingHorizontal: 5,
     justifyContent: 'center',
+    alignItems: 'center'
   },
   title: {
     color: 'white',
     fontSize: 16
   },
   rightContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 50,
-    width: 50
+    width: 80,
+    paddingRight: 20,
+  },
+  rightText: {
+    backgroundColor: 'white',
+    borderRadius: 4,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    fontSize: 14,
+    color: 'black',
   }
 })

@@ -7,14 +7,18 @@ import { Images } from '../Themes';
 export default class Header extends Component {
   // Prop type warnings
   static propTypes = {
+    isShowRight: PropTypes.bool,
     title: PropTypes.string,
-    onLeftPress: PropTypes.func
+    onLeftPress: PropTypes.func,
+    onRightPress: PropTypes.func,
   }
 
   // Defaults for props
   static defaultProps = {
+    isShowRight: false,
     title: '',
-    onLeftPress: null
+    onLeftPress: null,
+    onRightPress: null
   }
 
   render() {
@@ -26,7 +30,14 @@ export default class Header extends Component {
         <View style={styles.titleContainer}>
           <Text style={styles.title} numberOfLines={1}>{this.props.title}</Text>
         </View>
-        <View style={styles.rightContainer} />
+        {
+          this.props.isShowRight ?
+            <TouchableOpacity style={styles.rightContainer} onPress={() => this.props.onRightPress()}>
+              <Text style={styles.rightText}>Lưu</Text>
+            </TouchableOpacity>
+            : <View style={styles.rightContainer} />
+        }
+
       </View>
     )
   }

@@ -1,4 +1,5 @@
 import { StackNavigator, TabNavigator } from 'react-navigation'
+import ShoppingDetailScreen from '../Containers/ShoppingDetailScreen'
 import EditProfileScreen from '../Containers/EditProfileScreen'
 import RatingPageScreen from '../Containers/RatingPageScreen'
 import CommentPageScreen from '../Containers/CommentPageScreen'
@@ -26,7 +27,7 @@ const TabBarScreen = TabNavigator(
       path: '/home',
       navigationOptions: {
         headerTitleAllowFontScaling: false,
-        tabBarLabel: 'Home',
+        tabBarLabel: 'Trang chủ',
         tabBarIcon: ({ tintColor, focused }) => (
           <Image resizeMode='contain' style={styles.tabIcon}
             source={Images.tabbarHome} />
@@ -38,7 +39,7 @@ const TabBarScreen = TabNavigator(
       path: '/cart',
       navigationOptions: {
         headerTitleAllowFontScaling: false,
-        tabBarLabel: 'Cart',
+        tabBarLabel: 'Mua sắm',
         tabBarIcon: ({ tintColor, focused }) => (
           <Image resizeMode='contain' style={styles.tabIcon}
             source={Images.tabbarShopping} />
@@ -50,7 +51,7 @@ const TabBarScreen = TabNavigator(
       path: '/favorite',
       navigationOptions: {
         headerTitleAllowFontScaling: false,
-        tabBarLabel: 'Favorite',
+        tabBarLabel: 'Yêu thích',
         tabBarIcon: ({ tintColor, focused }) => (
           <Image resizeMode='contain' style={styles.tabIcon}
             source={Images.tabbarFavorite} />
@@ -62,7 +63,7 @@ const TabBarScreen = TabNavigator(
       path: '/search',
       navigationOptions: {
         headerTitleAllowFontScaling: false,
-        tabBarLabel: 'Search',
+        tabBarLabel: 'Tìm kiếm',
         tabBarIcon: ({ tintColor, focused }) => (
           <Image resizeMode='contain' style={styles.tabIcon}
             source={Images.tabbarSearch} />
@@ -74,7 +75,7 @@ const TabBarScreen = TabNavigator(
       path: '/my-page',
       navigationOptions: {
         headerTitleAllowFontScaling: false,
-        tabBarLabel: 'Mypage',
+        tabBarLabel: 'Cá nhân',
         tabBarIcon: ({ tintColor, focused }) => (
           <Image resizeMode='contain' style={styles.tabIcon}
             source={Images.tabbarMyPage} />
@@ -115,6 +116,7 @@ const TabBarScreen = TabNavigator(
 
 // Manifest of possible screens
 const PrimaryNav = StackNavigator({
+  ShoppingDetailScreen: { screen: ShoppingDetailScreen },
   EditProfileScreen: { screen: EditProfileScreen },
   RatingPageScreen: { screen: RatingPageScreen },
   CommentPageScreen: { screen: CommentPageScreen },
