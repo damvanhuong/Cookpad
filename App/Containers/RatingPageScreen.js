@@ -6,6 +6,8 @@ import RatingItem from '../Components/RatingItem'
 import StarRating from 'react-native-star-rating';
 import UserService from '../Config/UserService'
 import Firebase from '../Config/Firebase'
+import Constants from '../Config/Constants'
+import Analytics from '../Lib/Analytics'
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -61,11 +63,12 @@ class RatingPageScreen extends Component {
     if (UserService.userInfo.avatar)
       rating.avatar = UserService.userInfo.avatar
     listRating.push(rating)
-    console.log(this.props.postKey, listRating)
-    var ref = 'feedy/' + this.props.postKey
+    console.log(this.props.postKey, listRating, this.props.postRef)
+    var ref = this.props.postRef + this.props.postKey
     var postRef = Firebase.database().ref(ref)
     postRef.update({ ratings: listRating }).then(() => {
       console.log(' Rating OK')
+      Analytics.logEvent(Constants.eventName.rating_success, {})
       this.setState({ showModal: false })
     }).catch((error) => {
       console.log(error)

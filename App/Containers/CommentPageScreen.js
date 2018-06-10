@@ -6,6 +6,8 @@ import CommentItem from '../Components/CommentItem'
 import StarRating from 'react-native-star-rating';
 import UserService from '../Config/UserService'
 import Firebase from '../Config/Firebase'
+import Constants from '../Config/Constants'
+import Analytics from '../Lib/Analytics'
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -54,10 +56,11 @@ export default class CommentPageScreen extends Component {
     if (UserService.userInfo.avatar)
       comment.avatar = UserService.userInfo.avatar
     listComments.push(comment)
-    var ref = 'feedy/' + this.props.postKey
+    var ref = this.props.postRef + this.props.postKey
     var postRef = Firebase.database().ref(ref)
     postRef.update({ comments: listComments }).then(() => {
       console.log(' Comment OK')
+      Analytics.logEvent(Constants.eventName.comment_success, {})
       this.setState({ showModal: false })
     }).catch((error) => {
       console.log(error)
@@ -97,14 +100,14 @@ export default class CommentPageScreen extends Component {
   }
 
   renderFooter() {
-    if (UserService.userInfo.uid !== this.props.data.uid) {
+    // if (UserService.userInfo.uid !== this.props.data.uid) {
       return (
         <TouchableOpacity style={styles.ratingContainer} onPress={this.showModal}>
           <Image style={styles.ratingImage} source={Images.icComment} />
         </TouchableOpacity>
       )
-    }
-    else return null
+    // }
+    // else return null
   }
 
   render() {

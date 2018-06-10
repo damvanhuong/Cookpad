@@ -10,6 +10,7 @@ import UserService from '../Config/UserService';
 import { SearchBar } from 'react-native-elements'
 import ShoppingItem from '../Components/ShoppingItem'
 import { CachedImage } from 'react-native-cached-image';
+import Loading from '../Components/Loading'
 import { Colors } from '../Themes';
 
 const TAG = 'CartScreen'
@@ -19,7 +20,7 @@ export default class CartScreen extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { dataSource: [] }
+    this.state = { loading: false, dataSource: [] }
 
     this.renderItem = this.renderItem.bind(this)
   }
@@ -29,18 +30,19 @@ export default class CartScreen extends Component {
   }
 
   getData() {
-    console.log(TAG, 'getData', UserService.userInfo.listShopping)
-    let listShoppingId = (UserService.userInfo && UserService.userInfo.listShopping !== undefined) ? UserService.userInfo.listShopping : []
+    this.setState({ loading: true })
+    console.log(TAG, 'getData', UserService.userInfo)
+    let listData = (UserService.userInfo && UserService.userInfo.listShopping !== undefined) ? UserService.userInfo.listShopping : []
     let listShopping = []
-    for (let i = 0; i < listShoppingId.length; i++) {
-      let ref = 'feedy/' + listShoppingId[i]
+    for (let i = 0; i < listData.length; i++) {
+      let ref = listData[i].ref + listData[i].key
       Firebase.database().ref(ref).on('value',
         snap => {
           console.log(TAG, '>getData', snap.val())
           listShopping.push(snap.val())
         })
     }
-    this.setState({ dataSource: listShopping })
+    this.setState({ dataSource: listShopping, loading: false })
   }
 
   onPressItem = (item) => () => {
@@ -63,6 +65,7 @@ export default class CartScreen extends Component {
           data={this.state.dataSource}
           renderItem={this.renderItem}
           keyExtractor={(item, index) => item + index} />
+        <Loading show={this.state.loading} color={Colors.main} backgroundColor={Colors.transparent} />
       </View>
     )
   }

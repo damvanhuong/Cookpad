@@ -9,18 +9,22 @@ export default class MaterialItem extends Component {
   static propTypes = {
     index: PropTypes.number,
     onPressRemove: PropTypes.func,
+    isEdit: PropTypes.bool,
+    data: PropTypes.object
   }
 
   // Defaults for props
   static defaultProps = {
     number: 0,
-    onPressRemove: null
+    onPressRemove: null,
+    isEdit: false,
+    data: null
   }
 
   constructor(props) {
     super(props)
 
-    this.state = { text: '' }
+    this.state = { text: props.isEdit ? props.data : '' }
 
     this.onChangeText = this.onChangeText.bind(this)
     this.getText = this.getText.bind(this)
@@ -38,6 +42,7 @@ export default class MaterialItem extends Component {
     return (
       <View style={styles.container}>
         <TextInput style={styles.input}
+          value={this.state.text}
           placeholder='Nguyên liệu'
           underlineColorAndroid='transparent'
           onChangeText={this.onChangeText} />

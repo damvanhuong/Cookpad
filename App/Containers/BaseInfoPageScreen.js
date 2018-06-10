@@ -25,11 +25,12 @@ export default class BaseInfoPageScreen extends Component {
     this.handleTimePicked = this.handleTimePicked.bind(this)
 
     this.state = {
-      image: null,
-      foodName: '',
-      foodDes: '',
-      timeText: '00h:00ph',
-      isDateTimePickerVisible: false
+      image: props.isEdit ? props.data.image : null,
+      foodName: props.isEdit ? props.data.foodName : '',
+      foodDes: props.isEdit ? props.data.foodDes : '',
+      timeText: props.isEdit ? props.data.timeText : '00h:00ph',
+      isDateTimePickerVisible: false,
+      isPickedImage: false
     }
   }
 
@@ -41,6 +42,10 @@ export default class BaseInfoPageScreen extends Component {
       timeText: this.state.timeText
     }
     return baseInfo
+  }
+
+  isPickedImage() {
+    return this.state.isPickedImage
   }
 
   getError() {
@@ -58,7 +63,7 @@ export default class BaseInfoPageScreen extends Component {
 
   showImagePicker() {
     ImagePickerController.showImagePicker().then(uri => {
-      this.setState({ image: uri })
+      this.setState({ image: uri, isPickedImage: true })
     })
   }
 
@@ -118,11 +123,13 @@ export default class BaseInfoPageScreen extends Component {
       <ScrollView style={styles.container}>
         {this.renderImageContainer()}
         <TextInput style={styles.textInput}
+          value={this.state.foodName}
           placeholder='Tên món ăn'
           underlineColorAndroid='transparent'
           onChangeText={this.onChangeNameText} />
         <View style={styles.line}></View>
         <TextInput style={[styles.textInput, { height: 100 }]}
+          value={this.state.foodDes}
           multiline={true}
           textAlignVertical='top'
           placeholder='Mô tả ngắn gọn về món ăn'

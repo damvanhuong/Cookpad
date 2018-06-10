@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { View, Text, Image, TouchableOpacity, FlatList, Alert, AsyncStorage } from 'react-native'
-import { connect } from 'react-redux'
 import { PagerTabIndicator, IndicatorViewPager, PagerTitleIndicator, PagerDotIndicator } from 'rn-viewpager';
 import { CachedImage } from 'react-native-cached-image';
 import Timeline from 'react-native-timeline-listview'
@@ -10,7 +9,7 @@ import UserService from '../Config/UserService'
 import Firebase from '../Config/Firebase'
 import Constants from '../Config/Constants'
 import Analytics from '../Lib/Analytics'
-
+import Loading from '../Components/Loading'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -18,7 +17,7 @@ import Analytics from '../Lib/Analytics'
 import styles from './Styles/PostDetailScreenStyle'
 import { Metrics, Images, Colors } from '../Themes';
 
-class PostDetailScreen extends Component {
+export default class PostDetailScreen extends Component {
 
   constructor(props) {
     super(props)
@@ -26,8 +25,10 @@ class PostDetailScreen extends Component {
     const mData = props.navigation.getParam('data', {})
     this.state = {
       loading: false,
-      key: mData.key, data: mData.data,
-      tutorials: this.getTutorials(mData.data)
+      key: mData.key,
+      data: mData.data,
+      tutorials: this.getTutorials(mData.data),
+      ref: this.props.navigation.getParam('ref', 'feedy')
     }
 
     this.goBack = this.goBack.bind(this)
@@ -38,7 +39,7 @@ class PostDetailScreen extends Component {
     this.renderTutorialItem = this.renderTutorialItem.bind(this)
   }
 
-  componentDidMount(){
+  componentDidMount() {
     Analytics.trackingScreen(Constants.screenName.postDetail)
   }
 
@@ -61,13 +62,14 @@ class PostDetailScreen extends Component {
     let isAdded = false
     let listShopping = (UserService.userInfo && UserService.userInfo.listShopping !== undefined) ? UserService.userInfo.listShopping : []
     for (let i = 0; i < listShopping.length; i++) {
-      if (listShopping[i] === this.state.key) {
+      if (listShopping[i].key === this.state.key) {
         isAdded = true
         break
       }
     }
     if (isAdded) {
       alert('Bạn đã thêm vào danh sách mua sắm rồi')
+      setTimeout(() => this.setState({ loading: false }), 500)
       return
     }
     //Find user ref
@@ -80,10 +82,10 @@ class PostDetailScreen extends Component {
           ref = 'users/' + child.key
           console.log('ref', ref, child)
         })
-        listShopping.push(this.state.key)
+        listShopping.push({ key: this.state.key, ref: this.state.ref })
         // update user info
         Firebase.database().ref(ref).update({
-          shoppingList: listShopping
+          listShopping: listShopping
         }).then(() => {
           this.setState({ loading: false })
           UserService.userInfo.listShopping = listShopping
@@ -119,7 +121,7 @@ class PostDetailScreen extends Component {
   }
 
   onPressEditButton() {
-
+    this.props.navigation.navigate('CreatePostScreen', { data: this.state.data, isEdit: true, postKey: this.state.key})
   }
 
   renderImageHeader() {
@@ -230,22 +232,12 @@ class PostDetailScreen extends Component {
           <View>
             {this.renderTutorialPage()}
           </View>
-          <CommentPageScreen data={this.state.data} postKey={this.state.key} />
-          <RatingPageScreen data={this.state.data} postKey={this.state.key} />
+          <CommentPageScreen data={this.state.data} postKey={this.state.key} postRef={this.state.ref} />
+          <RatingPageScreen data={this.state.data} postKey={this.state.key} postRef={this.state.ref} />
         </IndicatorViewPager>
+        <Loading show={this.state.loading} color={Colors.main} backgroundColor={Colors.transparent} />
       </View>
     )
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(PostDetailScreen)

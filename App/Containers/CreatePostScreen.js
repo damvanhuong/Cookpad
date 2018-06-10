@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, View, TouchableOpacity, Image, Alert } from 'react-native'
-import { connect } from 'react-redux'
-import { Metrics, Images } from '../Themes'
+import { Metrics, Images, Colors } from '../Themes'
 import DotIndicator from '../Components/DotIndicator'
 import BaseInfoPageScreen from './BaseInfoPageScreen'
 import MaterialPageScreen from './MaterialPageScreen'
@@ -11,6 +10,7 @@ import Firebase from '../Config/Firebase'
 import { IndicatorViewPager } from 'rn-viewpager';
 import Constants from '../Config/Constants'
 import Analytics from '../Lib/Analytics'
+import Loading from '../Components/Loading'
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -19,16 +19,20 @@ import Analytics from '../Lib/Analytics'
 import styles from './Styles/CreatePostScreenStyle'
 import UserService from '../Config/UserService';
 
-class CreatePostScreen extends Component {
+export default class CreatePostScreen extends Component {
 
   constructor(props) {
     super(props)
 
     this.state = {
+      isEdit: props.navigation.getParam('isEdit', false),
+      data: props.navigation.getParam('data', {}),
+      postKey: props.navigation.getParam('postKey', ''),
       pageSelected: 0,
       leftTitle: 'VỀ TRƯỚC',
       rightTitle: 'TIẾP THEO',
       isFinished: false,
+      loading: false
     }
 
     this.onPageSelected = this.onPageSelected.bind(this)
@@ -83,7 +87,38 @@ class CreatePostScreen extends Component {
     }
   }
 
+  updatePost(foodData) {
+    if (this.refs.baseInfoPage.isPickedImage()) {
+      //Upload image
+      FirebaseController.uploadImage(foodData.image, 'image/jpeg').then(url => {
+        foodData.image = url
+        // update database
+        Firebase.database().ref('feedy/' + this.state.postKey).update({
+          ...foodData
+        }).then(() => {
+          this.setState({ loading: false })
+          this.props.navigation.goBack()
+          Analytics.logEvent(Constants.eventName.update_post_success, {})
+          console.log('UPDATED WITH IMAGE!')
+        }).catch(error => { console.log(error) })
+      })
+        .catch(error => console.log(error))
+    }
+    else {
+      // update database
+      Firebase.database().ref('feedy/' + this.state.postKey).update({
+        ...foodData
+      }).then(() => {
+        this.setState({ loading: false })
+        this.props.navigation.goBack()
+        Analytics.logEvent(Constants.eventName.update_post_success, {})
+        console.log('UPDATED WITHOUT IMAGE!')
+      }).catch(error => { console.log(error) })
+    }
+  }
+
   handlePushData() {
+    this.setState({ loading: true })
     // console.log('handlePushData', this.refs)
 
     let baseInfoData = this.refs.baseInfoPage.getValue()
@@ -96,19 +131,25 @@ class CreatePostScreen extends Component {
     foodData.comment = []
     console.log('foodData', foodData)
 
-    //Upload image
-    FirebaseController.uploadImage(foodData.image, 'image/jpeg').then(url => {
-      foodData.image = url
-      // upload database
-      Firebase.database().ref('feedy').push({
-        ...foodData
-      }).then(() => {
-        this.props.navigation.goBack()
-        Analytics.logEvent(Constants.eventName.create_post_success, {})
-        console.log('INSERTED !')
-      }).catch(error => { console.log(error) })
-    })
-      .catch(error => console.log(error))
+    if (this.state.isEdit) {
+      this.updatePost(foodData)
+    }
+    else {
+      //Upload image
+      FirebaseController.uploadImage(foodData.image, 'image/jpeg').then(url => {
+        foodData.image = url
+        // upload database
+        Firebase.database().ref('feedy').push({
+          ...foodData
+        }).then(() => {
+          this.setState({ loading: false })
+          this.props.navigation.goBack()
+          Analytics.logEvent(Constants.eventName.create_post_success, {})
+          console.log('INSERTED !')
+        }).catch(error => { console.log(error) })
+      })
+        .catch(error => console.log(error))
+    }
   }
 
   render() {
@@ -121,13 +162,19 @@ class CreatePostScreen extends Component {
           onPageSelected={this.onPageSelected}
         >
           <View>
-            <BaseInfoPageScreen ref='baseInfoPage' />
+            {this.state.isEdit ?
+              <BaseInfoPageScreen ref='baseInfoPage' isEdit={true} data={this.state.data} />
+              : <BaseInfoPageScreen ref='baseInfoPage' />}
           </View>
           <View>
-            <MaterialPageScreen ref='materialPage' />
+            {this.state.isEdit ?
+              <MaterialPageScreen ref='materialPage' isEdit={true} data={this.state.data} />
+              : <MaterialPageScreen ref='materialPage' />}
           </View>
           <View>
-            <TutorialPageScreen ref='tutorialPage' />
+            {this.state.isEdit ?
+              <TutorialPageScreen ref='tutorialPage' isEdit={true} data={this.state.data} />
+              : <TutorialPageScreen ref='tutorialPage' />}
           </View>
         </IndicatorViewPager>
         <DotIndicator
@@ -138,19 +185,8 @@ class CreatePostScreen extends Component {
           rightTitle={this.state.rightTitle}
           onRightTitlePress={this.handleRightTitlePress}
         />
+        <Loading show={this.state.loading} color={Colors.main} backgroundColor={Colors.transparent} />
       </View>
     )
   }
 }
-
-const mapStateToProps = (state) => {
-  return {
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreatePostScreen)

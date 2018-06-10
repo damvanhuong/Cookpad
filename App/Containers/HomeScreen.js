@@ -2,11 +2,12 @@ import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native'
 import Firebase from '../Config/Firebase'
 import HomeItem from '../Components/HomeItem'
-import { connect } from 'react-redux'
 import { IndicatorViewPager, PagerDotIndicator } from 'rn-viewpager';
 import { CachedImage } from 'react-native-cached-image';
 import Constants from '../Config/Constants'
 import Analytics from '../Lib/Analytics'
+import Loading from '../Components/Loading'
+import { Colors } from '../Themes'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -14,18 +15,19 @@ import Analytics from '../Lib/Analytics'
 import styles from './Styles/HomeScreenStyle'
 import { Images } from '../Themes';
 
-class HomeScreen extends Component {
+export default class HomeScreen extends Component {
 
   constructor(props) {
     super(props)
 
-    this.state = { bannerDatas: [], dataSource: [] }
+    this.state = { bannerDatas: [], dataSource: [], loading: false }
 
     this.handleOpenCreatePostScreen = this.handleOpenCreatePostScreen.bind(this)
     this.renderItem = this.renderItem.bind(this)
   }
 
   componentDidMount() {
+    this.setState({ loading: true })
     Analytics.trackingScreen(Constants.screenName.home)
     Firebase.database().ref('banners').on('value', (snap) => {
       var bannerDatas = [];
@@ -33,7 +35,7 @@ class HomeScreen extends Component {
         console.log('bannerItem', child.val(), child.key)
         bannerDatas.push({ key: child.key, data: child.val() })
       })
-      this.setState({ bannerDatas: bannerDatas })
+      this.setState({ bannerDatas: bannerDatas, loading: false })
     })
 
     Firebase.database().ref('feedy').on('value', (snap) => {
@@ -42,7 +44,7 @@ class HomeScreen extends Component {
         console.log('feedyItem', child.val(), child.key)
         feedyDatas.push({ key: child.key, data: child.val() })
       })
-      this.setState({ dataSource: feedyDatas })
+      this.setState({ dataSource: feedyDatas, loading: false })
     })
   }
 
@@ -50,21 +52,21 @@ class HomeScreen extends Component {
     this.props.navigation.navigate('CreatePostScreen')
   }
 
-  handleOpenPostDetailScreen = (item) => () => {
+  handleOpenPostDetailScreen = (item, ref) => () => {
     console.log('handleOpenPostDetailScreen', item)
-    this.props.navigation.navigate('PostDetailScreen', { data: item })
+    this.props.navigation.navigate('PostDetailScreen', { data: item, ref: ref })
   }
 
   renderItem({ item, index }) {
     return (
-      <TouchableOpacity onPress={this.handleOpenPostDetailScreen(item)}>
+      <TouchableOpacity onPress={this.handleOpenPostDetailScreen(item, 'feedy/')}>
         <HomeItem key={index} data={item.data} />
       </TouchableOpacity>
     )
   }
 
   renderDotIndicator() {
-    return <PagerDotIndicator pageCount={3} />;
+    return <PagerDotIndicator pageCount={this.state.bannerDatas.length} />;
   }
 
   renderHeader() {
@@ -74,7 +76,7 @@ class HomeScreen extends Component {
         indicator={this.renderDotIndicator()}
       >
         {this.state.bannerDatas.map((item, index) => (
-          <TouchableOpacity onPress={this.handleOpenPostDetailScreen(item)}>
+          <TouchableOpacity onPress={this.handleOpenPostDetailScreen(item, 'banners/')}>
             <CachedImage key={index} style={{ height: 200 }} source={{ uri: item.data.image }} />
           </TouchableOpacity>))}
       </IndicatorViewPager>
@@ -104,19 +106,9 @@ class HomeScreen extends Component {
           ListHeaderComponent={this.renderHeader()}
           keyExtractor={(item, index) => item + index} />
         {this.renderAddButton()}
+        <Loading show={this.state.loading} color={Colors.main} backgroundColor={Colors.transparent}/>
       </View>
     )
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)

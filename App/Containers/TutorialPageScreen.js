@@ -17,10 +17,9 @@ export default class TutorialPageScreen extends Component {
   constructor(props) {
     super(props)
 
+    console.log('test', props)
     this.state = {
-      dataSource: [
-        { time: '1' }
-      ]
+      dataSource: props.isEdit ? this.getInitData() : [{ time: '1' }]
     }
 
     this.handlePressAddbutton = this.handlePressAddbutton.bind(this)
@@ -29,6 +28,15 @@ export default class TutorialPageScreen extends Component {
   }
 
   componentDidMount() {
+  }
+
+  getInitData() {
+    console.log('getInitData', this.props.data.tutorials)
+    let dataSource = []
+    for (let i = 0; i < this.props.data.tutorials.length; i++) {
+      dataSource.push({ time: i, data: this.props.data.tutorials[i] })
+    }
+    return dataSource
   }
 
   handlePressAddbutton() {
@@ -79,10 +87,19 @@ export default class TutorialPageScreen extends Component {
 
   renderDetail(rowData, sectionID, rowID) {
     console.log('Item', rowData)
-
+    if (!this.props.isEdit) {
+      return (
+        <TutorialItem ref={(ref) => this.textInputRef = { ...this.textInputRef, [`REF-FLATLIST-1-${rowID}`]: ref }}
+          key={rowID}
+          index={parseInt(rowID)}
+          onPressRemove={this.handlePressRemove} />
+      )
+    }
     return (
       <TutorialItem ref={(ref) => this.textInputRef = { ...this.textInputRef, [`REF-FLATLIST-1-${rowID}`]: ref }}
         key={rowID}
+        isEdit={true}
+        data={rowData.data}
         index={parseInt(rowID)}
         onPressRemove={this.handlePressRemove} />
     )

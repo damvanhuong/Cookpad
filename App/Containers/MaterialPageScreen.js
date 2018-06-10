@@ -14,7 +14,7 @@ export default class MaterialPageScreen extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { dataSource: [] }
+    this.state = { dataSource: props.isEdit ? props.data.rawMaterials : [] }
 
     this.handlePressAddButton = this.handlePressAddButton.bind(this)
     this.renderItem = this.renderItem.bind(this)
@@ -65,9 +65,16 @@ export default class MaterialPageScreen extends Component {
 
   renderItem({ item, index }) {
     console.log('Item', item)
+    if (!this.props.isEdit) {
+      return (
+        <MaterialItem ref={(ref) => this.textInputRef = { ...this.textInputRef, [`REF-FLATLIST${index}`]: ref }}
+          key={index} index={index} onPressRemove={this.handlePressRemove} onChangeText={this.handleChangeText} />
+      )
+    }
     return (
       <MaterialItem ref={(ref) => this.textInputRef = { ...this.textInputRef, [`REF-FLATLIST${index}`]: ref }}
-        key={index} index={index} onPressRemove={this.handlePressRemove} onChangeText={this.handleChangeText} />
+        key={index} index={index} onPressRemove={this.handlePressRemove} onChangeText={this.handleChangeText}
+        isEdit={true} data={item} />
     )
   }
 
