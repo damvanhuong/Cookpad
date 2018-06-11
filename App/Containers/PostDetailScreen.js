@@ -121,7 +121,7 @@ export default class PostDetailScreen extends Component {
   }
 
   onPressEditButton() {
-    this.props.navigation.navigate('CreatePostScreen', { data: this.state.data, isEdit: true, postKey: this.state.key})
+    this.props.navigation.navigate('CreatePostScreen', { data: this.state.data, isEdit: true, postKey: this.state.key })
   }
 
   renderImageHeader() {

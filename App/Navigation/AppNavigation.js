@@ -1,4 +1,5 @@
 import { StackNavigator, TabNavigator } from 'react-navigation'
+import ChangePasswordScreen from '../Containers/ChangePasswordScreen'
 import ShoppingDetailScreen from '../Containers/ShoppingDetailScreen'
 import EditProfileScreen from '../Containers/EditProfileScreen'
 import RatingPageScreen from '../Containers/RatingPageScreen'
@@ -46,18 +47,18 @@ const TabBarScreen = TabNavigator(
         )
       }
     },
-    FavoriteTab: {
-      screen: FavoriteScreen,
-      path: '/favorite',
-      navigationOptions: {
-        headerTitleAllowFontScaling: false,
-        tabBarLabel: 'Yêu thích',
-        tabBarIcon: ({ tintColor, focused }) => (
-          <Image resizeMode='contain' style={styles.tabIcon}
-            source={Images.tabbarFavorite} />
-        )
-      }
-    },
+    // FavoriteTab: {
+    //   screen: FavoriteScreen,
+    //   path: '/favorite',
+    //   navigationOptions: {
+    //     headerTitleAllowFontScaling: false,
+    //     tabBarLabel: 'Yêu thích',
+    //     tabBarIcon: ({ tintColor, focused }) => (
+    //       <Image resizeMode='contain' style={styles.tabIcon}
+    //         source={Images.tabbarFavorite} />
+    //     )
+    //   }
+    // },
     SearchTab: {
       screen: SearchScreen,
       path: '/search',
@@ -116,6 +117,7 @@ const TabBarScreen = TabNavigator(
 
 // Manifest of possible screens
 const PrimaryNav = StackNavigator({
+  ChangePasswordScreen: { screen: ChangePasswordScreen },
   ShoppingDetailScreen: { screen: ShoppingDetailScreen },
   EditProfileScreen: { screen: EditProfileScreen },
   RatingPageScreen: { screen: RatingPageScreen },

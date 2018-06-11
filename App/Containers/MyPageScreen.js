@@ -17,10 +17,15 @@ class MyPageScreen extends Component {
 
     this.logout = this.logout.bind(this)
     this.onEditProfilePress = this.onEditProfilePress.bind(this)
+    this.onChangePasswordPress = this.onChangePasswordPress.bind(this)
   }
 
-  onEditProfilePress(){
+  onEditProfilePress() {
     this.props.navigation.navigate('EditProfileScreen')
+  }
+
+  onChangePasswordPress() {
+    this.props.navigation.navigate('ChangePasswordScreen')
   }
 
   logout() {
@@ -53,6 +58,10 @@ class MyPageScreen extends Component {
         </View>
         <TouchableOpacity style={styles.itemContainer} onPress={this.onEditProfilePress}>
           <Text style={styles.itemText}>Chỉnh sửa thông tin cá nhân</Text>
+          <Image style={styles.itemArrowRight} source={Images.icArrowRight} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.itemContainer} onPress={this.onChangePasswordPress}>
+          <Text style={styles.itemText}>Thay đổi mật khẩu</Text>
           <Image style={styles.itemArrowRight} source={Images.icArrowRight} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.itemContainer} onPress={this.logout}>

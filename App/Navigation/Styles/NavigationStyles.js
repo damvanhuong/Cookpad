@@ -40,13 +40,13 @@ export default StyleSheet.create({
   },
   labelStyleiOS: {
     height: 15,
-    width: Metrics.screenWidth/5,
+    width: Metrics.screenWidth/4,
     fontSize: 10,
     padding: 0,
   },
   labelStyleAndroid: {
     height: 15,
-    width: Metrics.screenWidth/5,
+    width: Metrics.screenWidth/4,
     fontSize: 10,
     marginTop: 5,
     padding: 0,

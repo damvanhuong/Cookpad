@@ -47,8 +47,7 @@ export default class CommentPageScreen extends Component {
   }
 
   onPressSendButton() {
-    var postData = this.props.data
-    var listComments = (postData && postData.comments !== undefined) ? postData.comments : []
+    var listComments = this.state.data
     var comment = {}
     comment.userName = UserService.userInfo.userName
     comment.comment = this.state.comment
@@ -61,7 +60,7 @@ export default class CommentPageScreen extends Component {
     postRef.update({ comments: listComments }).then(() => {
       console.log(' Comment OK')
       Analytics.logEvent(Constants.eventName.comment_success, {})
-      this.setState({ showModal: false })
+      this.setState({ showModal: false, data: listComments })
     }).catch((error) => {
       console.log(error)
       this.setState({ showModal: false })
@@ -101,11 +100,11 @@ export default class CommentPageScreen extends Component {
 
   renderFooter() {
     // if (UserService.userInfo.uid !== this.props.data.uid) {
-      return (
-        <TouchableOpacity style={styles.ratingContainer} onPress={this.showModal}>
-          <Image style={styles.ratingImage} source={Images.icComment} />
-        </TouchableOpacity>
-      )
+    return (
+      <TouchableOpacity style={styles.ratingContainer} onPress={this.showModal}>
+        <Image style={styles.ratingImage} source={Images.icComment} />
+      </TouchableOpacity>
+    )
     // }
     // else return null
   }
@@ -114,6 +113,7 @@ export default class CommentPageScreen extends Component {
     return (
       <View style={styles.container}>
         <FlatList
+          extraData={this.state}
           style={styles.flatList}
           data={this.state.data}
           renderItem={this.renderItem} />

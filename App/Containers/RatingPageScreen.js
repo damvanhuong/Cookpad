@@ -53,8 +53,7 @@ class RatingPageScreen extends Component {
   }
 
   onPressSendButton() {
-    var postData = this.props.data
-    var listRating = (postData && postData.ratings !== undefined) ? postData.ratings : []
+    var listRating = this.state.data
     var rating = {}
     rating.userName = UserService.userInfo.userName
     rating.ratingCount = this.state.ratingCount
@@ -69,7 +68,7 @@ class RatingPageScreen extends Component {
     postRef.update({ ratings: listRating }).then(() => {
       console.log(' Rating OK')
       Analytics.logEvent(Constants.eventName.rating_success, {})
-      this.setState({ showModal: false })
+      this.setState({ showModal: false, data: listRating })
     }).catch((error) => {
       console.log(error)
       this.setState({ showModal: false })
@@ -129,6 +128,7 @@ class RatingPageScreen extends Component {
     return (
       <View style={styles.container}>
         <FlatList
+          extraData={this.state}
           style={styles.flatList}
           data={this.state.data}
           renderItem={this.renderItem} />

@@ -70,7 +70,7 @@ export default class RegisterScreen extends Component {
         this.setState({ loading: false })
       })
       this.setState({ loading: false })
-    }).catch(function (error) {
+    }).catch(error => {
       this.setState({ loading: false })
       alert(error.message)
     });
