@@ -78,8 +78,8 @@ export default class BaseInfoPageScreen extends Component {
   }
 
   handleTimePicked(date) {
-    console.log('handleTimePicked: ', date)
-    var time = moment(date).format('hh[h] mm[ph]')
+    var time = moment(date).format('HH[h] mm[ph]')
+    console.log('handleTimePicked: ', date, time)
     this.hideTimePicker(time);
   }
 

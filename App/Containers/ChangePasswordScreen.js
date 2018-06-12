@@ -5,6 +5,7 @@ import ImageTextInput from '../Components/ImageTextInput'
 import Firebase from '../Config/Firebase'
 import Loading from '../Components/Loading'
 import { Metrics, Images, Colors } from '../Themes';
+import Validate from '../Lib/Validate'
 
 // Styles
 import styles from './Styles/ChangePasswordScreenStyle'
@@ -51,7 +52,7 @@ export default class ChangePasswordScreen extends Component {
   }
 
   validate() {
-    if (this.state.email === '') {
+    if (!Validate.validateEmail(this.state)) {
       alert('Vui lòng nhập email');
       return false
     }
@@ -64,7 +65,7 @@ export default class ChangePasswordScreen extends Component {
       return false
     }
     else if (this.state.confirmPassword === '') {
-      alert('Vui lòng nhập lại mật khẩu mơi');
+      alert('Vui lòng nhập lại mật khẩu mới');
       return false
     }
     else if (this.state.newPassword !== this.state.confirmPassword) {
@@ -96,7 +97,7 @@ export default class ChangePasswordScreen extends Component {
       var errorCode = error.code;
       var errorMessage = error.message;
       this.setState({ loading: false })
-      alert(errorMessage);
+      alert('Lỗi thay đổi mật khẩu');
     });
   }
 

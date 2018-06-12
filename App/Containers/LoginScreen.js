@@ -5,6 +5,7 @@ import { Images } from '../Themes'
 import ImageTextInput from '../Components/ImageTextInput'
 import Firebase from '../Config/Firebase'
 import Loading from '../Components/Loading'
+import Validate from '../Lib/Validate'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -18,8 +19,8 @@ export default class LoginScreen extends Component {
     super(props)
     this.state = {
       loading: false,
-      userName: 'hantanabkhn@gmail.com',
-      password: '12345678'
+      userName: '',
+      password: ''
     }
 
     this.onUserTextChange = this.onUserTextChange.bind(this)
@@ -36,7 +37,22 @@ export default class LoginScreen extends Component {
     this.setState({ password: text })
   }
 
+  validate(){
+    if (!Validate.validateEmail(this.state.userName)) {
+      alert('Vui lòng nhập lại email hoặc tài khoản');
+      return false
+    }
+    else if (this.state.password === '') {
+      alert('Vui lòng nhập mật khẩu');
+      return false
+    }
+    else return true
+  }
+
   onPressSignIn() {
+    if (!this.validate()) {
+      return
+    }
     this.setState({ loading: true })
     Firebase.auth().signInWithEmailAndPassword(this.state.userName, this.state.password).then(user => {
       this.setState({ loading: false })
@@ -46,7 +62,7 @@ export default class LoginScreen extends Component {
       var errorCode = error.code;
       var errorMessage = error.message;
       this.setState({ loading: false })
-      alert(errorMessage);
+      alert('Lỗi đăng nhập tài khoản');
     });
   }
 

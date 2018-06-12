@@ -6,6 +6,7 @@ import ImageTextInput from '../Components/ImageTextInput'
 import Firebase from '../Config/Firebase'
 import UserService from '../Config/UserService';
 import Loading from '../Components/Loading'
+import Validate from '../Lib/Validate'
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -48,7 +49,30 @@ export default class RegisterScreen extends Component {
     this.props.navigation.pop()
   }
 
+  validate(){
+    if (!Validate.validateEmail(this.state.email)) {
+      alert('Vui lòng nhập lại email');
+      return false
+    }
+    else if (this.state.password === '') {
+      alert('Vui lòng nhập mật khẩu');
+      return false
+    }
+    else if (this.state.confirmPassword === '') {
+      alert('Vui lòng nhập lại mật khẩu');
+      return false
+    }
+    else if (this.state.password !== this.state.confirmPassword) {
+      alert('Mật khẩu không giống nhau');
+      return false
+    }
+    else return true
+  }
+
   onPressSignUp() {
+    if (!this.validate()) {
+      return
+    }
     this.setState({ loading: true })
     console.log('onPressSignUp')
     Firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(user => {
@@ -72,7 +96,7 @@ export default class RegisterScreen extends Component {
       this.setState({ loading: false })
     }).catch(error => {
       this.setState({ loading: false })
-      alert(error.message)
+      alert('Lỗi đăng ký tài khoản')
     });
   }
 
