@@ -52,7 +52,7 @@ export default class ChangePasswordScreen extends Component {
   }
 
   validate() {
-    if (!Validate.validateEmail(this.state)) {
+    if (!Validate.validateEmail(this.state.email)) {
       alert('Vui lòng nhập email');
       return false
     }
