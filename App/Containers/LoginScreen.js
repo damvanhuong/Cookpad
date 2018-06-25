@@ -62,7 +62,7 @@ export default class LoginScreen extends Component {
       var errorCode = error.code;
       var errorMessage = error.message;
       this.setState({ loading: false })
-      alert('Lỗi đăng nhập tài khoản');
+      alert('Mật khẩu hoặc email không đúng');
     });
   }
 

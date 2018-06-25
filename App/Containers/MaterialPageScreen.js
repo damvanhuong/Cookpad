@@ -14,7 +14,7 @@ export default class MaterialPageScreen extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { dataSource: props.isEdit ? props.data.rawMaterials : [] }
+    this.state = { dataSource: props.isEdit ? props.data.rawMaterials : [{ text: '' }] }
 
     this.handlePressAddButton = this.handlePressAddButton.bind(this)
     this.renderItem = this.renderItem.bind(this)
@@ -22,13 +22,15 @@ export default class MaterialPageScreen extends Component {
   }
 
   handlePressAddButton() {
-    this.setState({ dataSource: this.state.dataSource.concat({ text: '1' }) })
+    this.setState({ dataSource: this.state.dataSource.concat({ text: '' }) })
   }
 
   handlePressRemove(index) {
     var dataSource = this.state.dataSource
+    if (dataSource.length == 1)
+      return
     dataSource.splice(index, 1)
-    console.log('handlePressRemove', index)
+    console.log('handlePressRemove', index, dataSource)
     this.setState({ dataSource: dataSource })
   }
 
@@ -42,7 +44,7 @@ export default class MaterialPageScreen extends Component {
 
   getError() {
     var error = ''
-    // console.log('materialItem', this.refs, this.textInputRef)
+    console.log('materialItem', this.refs, this.textInputRef)
 
     for (let i = 0; i < this.state.dataSource.length; i++) {
       if (this.textInputRef[`REF-FLATLIST${i}`].getText() === '') {
@@ -86,6 +88,7 @@ export default class MaterialPageScreen extends Component {
         {this.renderAddContaner()}
         <FlatList
           ref="REF-FLATLIST"
+          extraData={this.state}
           data={this.state.dataSource}
           renderItem={this.renderItem}
           keyExtractor={(item, index) => item + index}
