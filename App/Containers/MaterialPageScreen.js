@@ -44,7 +44,7 @@ export default class MaterialPageScreen extends Component {
 
   getError() {
     var error = ''
-    console.log('materialItem', this.refs, this.textInputRef)
+    // console.log('materialItem', this.refs, this.textInputRef)
 
     for (let i = 0; i < this.state.dataSource.length; i++) {
       if (this.textInputRef[`REF-FLATLIST${i}`].getText() === '') {
