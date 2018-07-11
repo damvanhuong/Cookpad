@@ -16,6 +16,9 @@ export default class ShoppingItem extends Component {
   }
 
   render() {
+    if (!this.props.data)
+      return null
+
     let image = this.props.data.image
     let foodName = this.props.data.foodName || ''
 
